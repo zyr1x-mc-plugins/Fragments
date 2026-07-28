@@ -3,7 +3,9 @@ package ru.lewis.fragments
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import org.bukkit.plugin.Plugin
+import ru.lewis.fragments.api.FragmentsApi
 import ru.lewis.fragments.listener.NpcListener
+import ru.lewis.fragments.model.FragmentsEconomyImpl
 import ru.lewis.fragments.model.PlaceholderExpansion
 import ru.lewis.fragments.model.event.Event
 import ru.lewis.fragments.service.CommandService
@@ -23,7 +25,8 @@ class Main @Inject constructor(
     private val npcListener: NpcListener,
     private val fragmentsService: FragmentsService,
     private val event: Event,
-    private val placeholderExpansion: PlaceholderExpansion
+    private val placeholderExpansion: PlaceholderExpansion,
+    private val fragmentsEconomyImpl: FragmentsEconomyImpl
 ) {
     fun enable() {
         InvUI.getInstance().setPlugin(plugin);
@@ -35,6 +38,7 @@ class Main @Inject constructor(
         placeholderExpansion.register()
 
         registerListeners()
+        registerApi()
     }
 
     fun disable() {
@@ -45,5 +49,9 @@ class Main @Inject constructor(
 
     private fun registerListeners() {
         plugin.server.pluginManager.registerEvents(npcListener, plugin)
+    }
+
+    private fun registerApi() {
+        FragmentsApi.init(fragmentsEconomyImpl)
     }
 }

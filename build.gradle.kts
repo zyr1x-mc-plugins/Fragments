@@ -37,6 +37,7 @@ dependencies {
     library(libs.duration.serializer)
 
     // MINECRAFT TOOLS
+    compileOnly(project(":Api"))
     compileOnly(libs.placeholderapi)
     compileOnly(libs.kyori.minimessage)
     compileOnly(libs.invui)

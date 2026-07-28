@@ -12,3 +12,4 @@ plugins {
 }
 
 rootProject.name = "Fragments"
+include("Api")
