@@ -37,7 +37,7 @@ publishing {
 
             groupId = "ru.lewis.fragments"
             artifactId = "api"
-            version = "1.0.0"
+            version = "1.0.1"
         }
     }
 }

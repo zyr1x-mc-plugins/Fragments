@@ -3,6 +3,7 @@ import net.minecrell.pluginyml.paper.PaperPluginDescription
 plugins {
     kotlin("jvm") version "2.2.21"
     id("net.minecrell.plugin-yml.paper") version "0.6.0"
+    id("com.gradleup.shadow") version "8.3.5"
 }
 
 group = "ru.lewis.fragments"
@@ -37,7 +38,7 @@ dependencies {
     library(libs.duration.serializer)
 
     // MINECRAFT TOOLS
-    compileOnly(project(":Api"))
+    implementation(project(":Api"))
     compileOnly(libs.placeholderapi)
     compileOnly(libs.kyori.minimessage)
     compileOnly(libs.invui)
@@ -47,6 +48,23 @@ dependencies {
     library(libs.sponge.yaml)
     library(libs.sponge.extra.kotlin)
     compileOnly(files("gradle/libs/FancyNpcs-2.11.0.jar"))
+}
+
+tasks {
+    shadowJar {
+        archiveClassifier.set("")
+
+        exclude("META-INF/*.SF")
+        exclude("META-INF/*.DSA")
+        exclude("META-INF/*.RSA")
+
+        exclude("kotlin/**")
+        exclude("kotlinx/**")
+    }
+
+    build {
+        dependsOn(shadowJar)
+    }
 }
 
 configurations.all {
