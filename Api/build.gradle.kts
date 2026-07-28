@@ -35,8 +35,8 @@ publishing {
         create<MavenPublication>("gpr") {
             from(components["java"])
 
-            groupId = "ru.lewis"
-            artifactId = "fragments.api"
+            groupId = "ru.lewis.fragments"
+            artifactId = "api"
             version = "1.0.0"
         }
     }
