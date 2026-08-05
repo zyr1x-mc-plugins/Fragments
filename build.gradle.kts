@@ -19,22 +19,26 @@ repositories {
     maven("https://jitpack.io")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://maven.enginehub.org/repo/")
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/zyr1x-mc-plugins/Leaf")
+
+        credentials {
+            username = System.getenv("GITHUB_USERNAME")
+            password = System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 dependencies {
     // CORE
-    compileOnly(libs.paper.api)
+    compileOnly(libs.leaf.api)
 
     // KOTLIN RUNTIME (нужно резолвить как library, иначе Intrinsics не найдётся на рантайме)
     library(kotlin("stdlib"))
 
     // TOOLS
     library(libs.guice)
-    library(libs.hibernate.core)
-    library(libs.hibernate.hikari)
-    library(dependencyNotation = libs.redisson)
-    library(libs.kryo)
-    library(libs.mariadb)
     library(libs.duration.serializer)
 
     // MINECRAFT TOOLS
@@ -69,7 +73,8 @@ tasks {
 
 configurations.all {
     resolutionStrategy {
-        force("com.google.code.gson:gson:2.11.0")
+        force(libs.gson)
+        force(libs.guava)
     }
 }
 

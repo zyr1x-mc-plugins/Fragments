@@ -13,6 +13,9 @@ mariadb = "3.5.9"
 duration-serializer = "2.0.2"
 worldedit = "7.3.16"
 worldguard = "7.0.14"
+leaf-api = "1.21.8-R0.1-SNAPSHOT"
+guava = "33.3.1-jre"
+gson = "2.11.0"
 
 [libraries]
 paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper-api" }
@@ -31,3 +34,6 @@ mariadb = { module = "org.mariadb.jdbc:mariadb-java-client", version.ref = "mari
 duration-serializer = { module = "io.github.blackbaroness:duration-serializer", version.ref = "duration-serializer" }
 worldedit = { module = "com.sk89q.worldedit:worldedit-bukkit", version.ref = "worldedit" }
 worldguard = { module = "com.sk89q.worldguard:worldguard-bukkit", version.ref = "worldguard" }
+leaf-api = { module = "cn.dreeam.leaf:leaf-api", version.ref = "leaf-api" }
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }

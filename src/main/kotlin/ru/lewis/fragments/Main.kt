@@ -5,38 +5,39 @@ import jakarta.inject.Singleton
 import org.bukkit.plugin.Plugin
 import ru.lewis.fragments.api.FragmentsApi
 import ru.lewis.fragments.listener.NpcListener
+import ru.lewis.fragments.listener.ServerLoadedListener
 import ru.lewis.fragments.model.FragmentsEconomyImpl
+import ru.lewis.fragments.model.FragmentsUserEntity
 import ru.lewis.fragments.model.PlaceholderExpansion
 import ru.lewis.fragments.model.event.Event
 import ru.lewis.fragments.service.CommandService
-import ru.lewis.fragments.service.DatabaseService
-import ru.lewis.fragments.service.RedisService
 import ru.lewis.fragments.service.ConfigurationService
 import ru.lewis.fragments.service.FragmentsService
+import ru.lewis.fragments.task.EventTask
+import ru.lewis.point.api.PointAPI
 import xyz.xenondevs.invui.InvUI
 
 @Singleton
 class Main @Inject constructor(
     private val plugin: Plugin,
     private val configurationService: ConfigurationService,
-    private val redisService: RedisService,
     private val commandService: CommandService,
-    private val databaseService: DatabaseService,
     private val npcListener: NpcListener,
-    private val fragmentsService: FragmentsService,
+    private val serverLoadedListener: ServerLoadedListener,
+    private val pointAPI: PointAPI,
     private val event: Event,
     private val placeholderExpansion: PlaceholderExpansion,
-    private val fragmentsEconomyImpl: FragmentsEconomyImpl
+    private val fragmentsEconomyImpl: FragmentsEconomyImpl,
+    private val eventTask: EventTask
 ) {
     fun enable() {
         InvUI.getInstance().setPlugin(plugin);
         configurationService.run()
-        databaseService.init()
-        redisService.getClient()
-        fragmentsService.loadCache()
         commandService.register()
         placeholderExpansion.register()
+        eventTask.init()
 
+        registerEntities()
         registerListeners()
         registerApi()
     }
@@ -48,10 +49,17 @@ class Main @Inject constructor(
     }
 
     private fun registerListeners() {
-        plugin.server.pluginManager.registerEvents(npcListener, plugin)
+        val pluginManager = plugin.server.pluginManager
+
+        pluginManager.registerEvents(npcListener, plugin)
+        pluginManager.registerEvents(serverLoadedListener, plugin)
     }
 
     private fun registerApi() {
         FragmentsApi.init(fragmentsEconomyImpl)
+    }
+
+    private fun registerEntities() {
+        pointAPI.databaseService.registerEntity(FragmentsUserEntity::class.java)
     }
 }

@@ -6,12 +6,9 @@ import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
-import org.bukkit.plugin.Plugin
 
 @Singleton
-class ItemService @Inject constructor(
-    private val plugin: Plugin
-) {
+class ItemService @Inject constructor() {
 
     fun applyStrings(
         item: ItemStack,
@@ -23,7 +20,7 @@ class ItemService @Inject constructor(
 
         values.forEach { (key, value) ->
             container.set(
-                NamespacedKey(plugin, key),
+                NamespacedKey(NAMESPACE, key),
                 PersistentDataType.STRING,
                 value
             )
@@ -45,7 +42,7 @@ class ItemService @Inject constructor(
 
         return values.all { (key, value) ->
             container.get(
-                NamespacedKey(plugin, key),
+                NamespacedKey(NAMESPACE, key),
                 PersistentDataType.STRING
             ) == value
         }
@@ -92,5 +89,9 @@ class ItemService @Inject constructor(
         player.updateInventory()
 
         return amount - remaining
+    }
+
+    companion object {
+        private const val NAMESPACE = "lewis"
     }
 }

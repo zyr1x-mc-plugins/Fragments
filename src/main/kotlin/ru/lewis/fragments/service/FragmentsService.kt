@@ -2,14 +2,15 @@ package ru.lewis.fragments.service
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import ru.lewis.fragments.model.UserEntity
+import ru.lewis.fragments.model.FragmentsUserEntity
 import ru.lewis.fragments.repository.FragmentsRepository
+import ru.lewis.point.api.PointAPI
 import java.util.UUID
 
 @Singleton
 class FragmentsService @Inject constructor(
     private val repository: FragmentsRepository,
-    private val redisService: RedisService
+    private val pointAPI: PointAPI
 ) {
 
     private companion object {
@@ -17,8 +18,7 @@ class FragmentsService @Inject constructor(
     }
 
     private fun getCache() =
-        redisService.getClient()
-            .getMapCache<UUID, Int>(CACHE_KEY)
+        pointAPI.redisService.client.getMapCache<UUID, Int>(CACHE_KEY)
 
     private fun checkCache() {
         val cache = getCache()
@@ -90,7 +90,7 @@ class FragmentsService @Inject constructor(
 
     private fun saveToDatabase(uuid: UUID, count: Int) {
         val entity = repository.findById(uuid)
-            ?: UserEntity(uuid = uuid)
+            ?: FragmentsUserEntity(uuid = uuid)
 
         entity.count = count
 

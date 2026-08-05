@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule
 import com.google.inject.Provides
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.plugin.Plugin
+import ru.lewis.point.api.PointAPI
 
 class InjectionModule(
     private val plugin: Plugin
@@ -17,4 +18,7 @@ class InjectionModule(
 
     @Provides
     fun MiniMessage(): MiniMessage = MiniMessage.miniMessage()
+
+    @Provides
+    fun pointAPI(): PointAPI = PointAPI.get()
 }

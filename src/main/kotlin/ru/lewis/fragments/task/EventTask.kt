@@ -10,15 +10,15 @@ import ru.lewis.fragments.service.ConfigurationService
 
 @Singleton
 class EventTask @Inject constructor(
-    plugin: Plugin,
-    private val configurationService: ConfigurationService,
+    private val plugin: Plugin,
     private val event: Event,
-): BukkitRunnable() {
-    private val eventSection get() = configurationService.eventConfigurationSection
+    private val configurationService: ConfigurationService
+) : BukkitRunnable() {
+    private val config get() = configurationService.eventConfigurationSection
 
-    init {
-        val ticks = eventSection.repeat.inTicks
-        this.runTaskTimer(plugin, ticks, ticks)
+    fun init() {
+        val inTicks = config.repeat.inTicks
+        this.runTaskTimer(plugin, inTicks, inTicks)
     }
 
     override fun run() {

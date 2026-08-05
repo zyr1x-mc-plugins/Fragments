@@ -98,6 +98,7 @@ class EventStartHandle @Inject constructor(
 
         return schematicLocationService
             .findRandomLocationAsync(
+                plugin,
                 world,
                 clipboard,
                 locationConfig.minX,

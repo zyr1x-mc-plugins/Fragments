@@ -7,8 +7,8 @@ import jakarta.persistence.Table
 import java.util.UUID
 
 @Entity
-@Table(name = "users")
-open class UserEntity(
+@Table(name = "fragments_users")
+open class FragmentsUserEntity(
     @Id
     @Column(name = "uuid", nullable = false, updatable = false)
     open var uuid: UUID? = null,

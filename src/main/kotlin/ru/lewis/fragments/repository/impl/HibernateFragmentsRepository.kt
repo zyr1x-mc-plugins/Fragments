@@ -3,23 +3,23 @@ package ru.lewis.fragments.repository.impl
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import org.hibernate.SessionFactory
-import ru.lewis.fragments.model.UserEntity
+import ru.lewis.fragments.model.FragmentsUserEntity
 import ru.lewis.fragments.repository.FragmentsRepository
-import ru.lewis.fragments.service.DatabaseService
+import ru.lewis.point.api.PointAPI
 import java.util.UUID
 
 @Singleton
 class HibernateFragmentsRepository @Inject constructor(
-    private val databaseService: DatabaseService
+    private val pointAPI: PointAPI
 ) : FragmentsRepository {
-    private val sessionFactory: SessionFactory get() = databaseService.sessionFactory
+    private val sessionFactory: SessionFactory get() = pointAPI.databaseService.sessionFactory
 
-    override fun findById(uuid: UUID): UserEntity? =
+    override fun findById(uuid: UUID): FragmentsUserEntity? =
         sessionFactory.openSession().use { session ->
-            session.find(UserEntity::class.java, uuid)
+            session.find(FragmentsUserEntity::class.java, uuid)
         }
 
-    override fun save(entity: UserEntity) {
+    override fun save(entity: FragmentsUserEntity) {
         sessionFactory.openSession().use { session ->
             session.beginTransaction()
             session.merge(entity)
@@ -27,7 +27,7 @@ class HibernateFragmentsRepository @Inject constructor(
         }
     }
 
-    override fun delete(entity: UserEntity) {
+    override fun delete(entity: FragmentsUserEntity) {
         sessionFactory.openSession().use { session ->
             session.beginTransaction()
             session.remove(entity)
@@ -35,21 +35,21 @@ class HibernateFragmentsRepository @Inject constructor(
         }
     }
 
-    override fun getTop(limit: Int): List<UserEntity> =
+    override fun getTop(limit: Int): List<FragmentsUserEntity> =
         sessionFactory.openSession().use { session ->
             session.createQuery(
-                "FROM UserEntity ORDER BY count DESC",
-                UserEntity::class.java
+                "FROM ru.lewis.fragments.model.FragmentsUserEntity ORDER BY count DESC",
+                FragmentsUserEntity::class.java
             )
                 .setMaxResults(limit)
                 .resultList
         }
 
-    override fun findAll(): List<UserEntity> =
+    override fun findAll(): List<FragmentsUserEntity> =
         sessionFactory.openSession().use { session ->
             val builder = session.criteriaBuilder
-            val query = builder.createQuery(UserEntity::class.java)
-            val root = query.from(UserEntity::class.java)
+            val query = builder.createQuery(FragmentsUserEntity::class.java)
+            val root = query.from(FragmentsUserEntity::class.java)
             query.select(root)
             session.createQuery(query).resultList
         }
