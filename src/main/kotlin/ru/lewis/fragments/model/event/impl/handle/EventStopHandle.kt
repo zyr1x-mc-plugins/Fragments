@@ -3,6 +3,7 @@ package ru.lewis.fragments.model.event.impl.handle
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import org.bukkit.plugin.Plugin
+import ru.lewis.fragments.api.event.FragmentEventStoppedEvent
 import ru.lewis.fragments.extensions.broadCast
 import ru.lewis.fragments.model.event.impl.EventState
 import ru.lewis.fragments.service.ConfigurationService
@@ -52,6 +53,8 @@ class EventStopHandle @Inject constructor(
 
             plugin.logger.info("[Event] state.clear()")
             state.clear()
+
+            plugin.server.pluginManager.callEvent(FragmentEventStoppedEvent())
         } catch (exception: Exception) {
             plugin.logger.log(java.util.logging.Level.SEVERE, "[Event] Ошибка при остановке события", exception)
         }

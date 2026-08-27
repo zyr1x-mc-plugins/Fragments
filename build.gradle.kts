@@ -1,4 +1,5 @@
 import net.minecrell.pluginyml.paper.PaperPluginDescription
+import org.gradle.api.tasks.Sync
 
 plugins {
     kotlin("jvm") version "2.2.21"
@@ -65,10 +66,30 @@ tasks {
         exclude("kotlin/**")
         exclude("kotlinx/**")
     }
+}
 
-    build {
-        dependsOn(shadowJar)
+// Собирает plugin-jar и api-jar в единую папку для релиза/раздачи.
+val assembleDistribution = tasks.register<Sync>("assembleDistribution") {
+    group = "build"
+    description = "Copies the plugin and API jars into build/dist"
+
+    dependsOn(tasks.named("shadowJar"))
+    dependsOn(tasks.named("jar"))
+    dependsOn(project(":Api").tasks.named("jar"))
+
+    into(layout.buildDirectory.dir("dist"))
+
+    from(tasks.shadowJar.get().archiveFile) {
+        rename { "Fragments.jar" }
     }
+    from(project(":Api").tasks.named("jar").map { it as org.gradle.jvm.tasks.Jar }) {
+        rename { "Fragments-api.jar" }
+    }
+}
+
+tasks.named("build") {
+    dependsOn("shadowJar")
+    dependsOn(assembleDistribution)
 }
 
 configurations.all {

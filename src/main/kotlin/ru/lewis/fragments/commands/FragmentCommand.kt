@@ -54,6 +54,20 @@ class FragmentCommand @Inject constructor(
         player.inventory.addItem(item)
     }
 
+    @Execute(name = "give")
+    fun giveItem(@Arg player: Player, @Arg count: Int) {
+        val itemConfig = configurationService.configurationSection.fragmentItem
+        val item = itemConfig.toItem()
+        item.amount = count
+
+        itemService.applyStrings(
+            item,
+            ItemStrings.map
+        )
+
+        player.inventory.addItem(item)
+    }
+
     @Execute(name = "balance")
     fun checkBalance(@Context player: Player) {
         val uniqueId = player.uniqueId

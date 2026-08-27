@@ -11,27 +11,30 @@ import java.util.UUID
 class FragmentsEconomyImpl @Inject constructor(
     private val fragmentsService: FragmentsService
 ) : FragmentsEconomy {
-    override fun addFragments(player: Player, count: Int) {
-        fragmentsService.addCount(player.uniqueId, count)
-    }
+    override fun getFragments(player: Player): Int =
+        fragmentsService.getCount(player.uniqueId)
 
-    override fun removeFragments(player: Player, count: Int) {
-        fragmentsService.removeCount(player.uniqueId, count)
-    }
+    override fun getFragments(uniqueId: UUID): Int =
+        fragmentsService.getCount(uniqueId)
 
-    override fun setFragments(player: Player, count: Int) {
-        fragmentsService.setCount(player.uniqueId, count)
-    }
+    override fun addFragments(player: Player, amount: Int): Int =
+        fragmentsService.addCount(player.uniqueId, amount)
 
-    override fun addFragments(uniqueId: UUID, count: Int) {
-        fragmentsService.addCount(uniqueId, count)
-    }
+    override fun addFragments(uniqueId: UUID, amount: Int): Int =
+        fragmentsService.addCount(uniqueId, amount)
 
-    override fun removeFragments(uniqueId: UUID, count: Int) {
-        fragmentsService.removeCount(uniqueId, count)
-    }
+    override fun removeFragments(player: Player, amount: Int): Int =
+        fragmentsService.removeCount(player.uniqueId, amount)
 
-    override fun setFragments(uniqueId: UUID, count: Int) {
-        fragmentsService.setCount(uniqueId, count)
-    }
+    override fun removeFragments(uniqueId: UUID, amount: Int): Int =
+        fragmentsService.removeCount(uniqueId, amount)
+
+    override fun setFragments(player: Player, amount: Int): Int =
+        fragmentsService.setCount(player.uniqueId, amount)
+
+    override fun setFragments(uniqueId: UUID, amount: Int): Int =
+        fragmentsService.setCount(uniqueId, amount)
+
+    override fun getTop(limit: Int): Map<UUID, Int> =
+        fragmentsService.getTop(limit)
 }

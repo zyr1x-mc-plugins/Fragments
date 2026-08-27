@@ -9,6 +9,7 @@ import ru.lewis.fragments.extensions.broadCast
 import ru.lewis.fragments.extensions.broadCastSound
 import ru.lewis.fragments.extensions.broadCastTitle
 import ru.lewis.fragments.extensions.inTicks
+import ru.lewis.fragments.api.event.FragmentEventStartedEvent
 import ru.lewis.fragments.model.event.impl.EventState
 import ru.lewis.fragments.service.ConfigurationService
 import ru.lewis.fragments.service.FancyNpcService
@@ -63,6 +64,10 @@ class EventStartHandle @Inject constructor(
                             )
                             broadCastTitle(start.title)
                             broadCastSound(start.sound)
+
+                            Bukkit.getPluginManager().callEvent(
+                                FragmentEventStartedEvent(state.location!!)
+                            )
                         } catch (exception: Exception) {
                             plugin.logger.log(Level.SEVERE, "[Event] Ошибка после размещения схематики", exception)
                             state.clear()

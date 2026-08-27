@@ -3,10 +3,12 @@ package ru.lewis.fragments
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import org.bukkit.plugin.Plugin
+import org.bukkit.plugin.ServicePriority
 import ru.lewis.fragments.api.FragmentsApi
+import ru.lewis.fragments.api.FragmentsEconomy
+import ru.lewis.fragments.api.impl.FragmentsApiImpl
 import ru.lewis.fragments.listener.NpcListener
 import ru.lewis.fragments.listener.ServerLoadedListener
-import ru.lewis.fragments.model.FragmentsEconomyImpl
 import ru.lewis.fragments.model.FragmentsUserEntity
 import ru.lewis.fragments.model.PlaceholderExpansion
 import ru.lewis.fragments.model.event.Event
@@ -27,7 +29,7 @@ class Main @Inject constructor(
     private val pointAPI: PointAPI,
     private val event: Event,
     private val placeholderExpansion: PlaceholderExpansion,
-    private val fragmentsEconomyImpl: FragmentsEconomyImpl,
+    private val fragmentsApiImpl: FragmentsApiImpl,
     private val eventTask: EventTask
 ) {
     fun enable() {
@@ -46,6 +48,7 @@ class Main @Inject constructor(
         commandService.unregister()
         event.stop()
         placeholderExpansion.unregister()
+        unregisterApi()
     }
 
     private fun registerListeners() {
@@ -56,7 +59,26 @@ class Main @Inject constructor(
     }
 
     private fun registerApi() {
-        FragmentsApi.init(fragmentsEconomyImpl)
+        val services = plugin.server.servicesManager
+
+        services.register(
+            FragmentsApi::class.java,
+            fragmentsApiImpl,
+            plugin,
+            ServicePriority.Normal
+        )
+
+        // Также регистрируем экономику напрямую — удобная точка входа для интеграций.
+        services.register(
+            FragmentsEconomy::class.java,
+            fragmentsApiImpl.economy,
+            plugin,
+            ServicePriority.Normal
+        )
+    }
+
+    private fun unregisterApi() {
+        plugin.server.servicesManager.unregisterAll(plugin)
     }
 
     private fun registerEntities() {

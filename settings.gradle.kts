@@ -13,3 +13,4 @@ plugins {
 
 rootProject.name = "Fragments"
 include("Api")
+include("Integration")
